@@ -1,0 +1,159 @@
+看了网上的一些文章，有些借鉴，但和我实际操作还是有些出入，我在php版7.1.14， mac机，源码php7.1.18，测试成功。
+
+ 
+
+A——1）进入源码ext文件夹
+
+./ext_skel –extname=deng
+
+A——2）修改config.m4
+
+去掉这三个dnl注释
+
+PHP_ARG_ENABLE(deng, whether to enable deng support,
+
+Make sure that the comment is aligned:
+
+[  –enable-deng           Enable deng support])
+
+A——3）命令行输入phpize，编程php模块
+
+./configure
+
+make
+
+make install
+
+没错误的话，会提示在某地址生成.so模块文件
+
+至此，模块生成。
+
+A——4）加载模块
+
+修改php.ini，php.ini地址有2个
+
+/etc/php.ini 修改无效
+
+/usr/local/etc/php.ini 修改有效
+
+加入extension = deng.so
+
+命令行输入php -m查看所有模块
+
+在源码文件夹有/ext/deng/deng.php
+
+执行php deng.php可以看模块支持函数
+
+A——5）测试，
+
+没有任何外部函数，只有一个内置confirm_deng_compiled(“okok”);
+
+命令行下能成功输出，网页不行。
+
+B——1）定义函数
+
+修改deng.c， php_deng.h不需要动
+
+/*定义函数*/
+PHP_FUNCTION(sum)
+{
+    int x, y, z;
+    
+    int argc = ZEND_NUM_ARGS();
+    
+    if (zend_parse_parameters(argc TSRMLS_CC, "ll", &x, &y) == FAILURE)
+        return;
+    z = x + y;
+    RETURN_LONG(z);
+}
+/*函数声明*/
+const zend_function_entry deng_functions[] = {
+	PHP_FE(confirm_deng_compiled,	NULL)		/* For testing, remove later. */
+    PHP_FE(sum, NULL)
+	PHP_FE_END	/* Must be the last line in deng_functions[] */
+};
+B——2）定义类（属性和方法）
+
+/*
+ * define a class
+ * 1 - put class and funcs here
+ * 2 - modify PHP_MINIT_FUNCTION(deng)
+ */
+zend_class_entry *myclass_ce;
+
+
+/* class methods define */
+ZEND_METHOD(myclass, public_method)
+{
+    php_printf("我是public_method方法\n");
+}
+ZEND_METHOD(myclass, __construct)
+{
+    php_printf("我是构造方法\n");
+}
+
+/* class methods declare */
+PHP_METHOD(myclass, public_method);
+PHP_METHOD(myclass, __construct);
+
+
+static zend_function_entry myclass_methods[] =
+{
+    ZEND_ME(myclass, public_method, NULL, ZEND_ACC_PUBLIC)
+    ZEND_ME(myclass, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+    {NULL, NULL, NULL}
+};
+ 
+
+PHP_MINIT_FUNCTION(deng)
+{
+	/* If you have INI entries, uncomment these lines
+	REGISTER_INI_ENTRIES();
+	*/
+    
+    /* added by shark
+     * to register a class
+     */
+    zend_class_entry ce;
+    INIT_CLASS_ENTRY(ce, "myclass", myclass_methods);
+    myclass_ce = zend_register_internal_class(&ce TSRMLS_CC);
+    
+    /* define class property
+     * 3 infos are needed: name, value, visit_level
+     * ----visit_level----
+     * #define ZEND_ACC_STATIC      0x01    static
+     * #define ZEND_ACC_PUBLIC      0x100   public
+     * #define ZEND_ACC_PROTECTED   0x200   protected
+     * #define ZEND_ACC_PRIVATE     8x400   private
+     * #define ZEND_ACC_CTOR                __construct
+     * #define ZEND_ACC_DTOR                __destruct
+     * ----value----
+     * zend_declare_property_null   null
+     * zend_declare_property_string string
+     */
+    zend_declare_property_null(myclass_ce, "public_var", strlen("public_var"), ZEND_ACC_PUBLIC TSRMLS_CC);
+    
+    /* define class constant */
+    zend_declare_class_constant_string(myclass_ce, "CONSTANT_VAR", strlen("CPNSTANT_VAR"), "boygirl88.com" TSRMLS_CC);
+    
+    
+    
+	return SUCCESS;
+}
+B——3）测试
+
+<?php
+echo confirm_deng_compiled("okok");
+echo "\n";
+
+
+echo  sum(1, 2);
+echo "\n";
+
+$gameObject = new myclass();
+
+echo "\n";
+
+var_dump($gameObject);
+
+?>
