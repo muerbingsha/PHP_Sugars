@@ -44,12 +44,12 @@ static void php_zdeng_init_globals(zend_zdeng_globals *zdeng_globals)
 / * 5 */
 PHP_MINIT_FUNCTION(zdeng)
 {
-/* If you have INI entries, uncomment these lines */
+    /* If you have INI entries, uncomment these lines */
     ZEND_INIT_MODULE_GLOBALS(zdeng, php_zdeng_init_globals, NULL);
-	REGISTER_INI_ENTRIES();
-  
-  RETURN SUCCESS;
-  }
+    REGISTER_INI_ENTRIES();
+	
+    RETURN SUCCESS;
+}
   
  
  /* 6 */
