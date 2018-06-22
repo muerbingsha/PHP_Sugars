@@ -52,7 +52,7 @@ PHP_MINIT_FUNCTION(zdeng)
 }
   
  
- /* 6 */
+/* 6 */
 /* {{{ PHP_MSHUTDOWN_FUNCTION
  */
 PHP_MSHUTDOWN_FUNCTION(zdeng)
@@ -63,4 +63,11 @@ PHP_MSHUTDOWN_FUNCTION(zdeng)
 	return SUCCESS;
 }
 /* }}} */
+
+
+/* 7 */
+PHP_FUNCTION(getGreeting){
+	php_printf(ZDENG_G(greeting));
+}
+
   
