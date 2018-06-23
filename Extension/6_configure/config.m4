@@ -13,19 +13,19 @@ dnl If your extension references something external, use with:
 
 
 
-dnl [Shark] open this( --with-moduleName ) for PHP_ADD_INCLUDE take effects
-dnl --with-libName to 
+dnl [Shark] 要include头，第一步打开这个，第二步打开PHP_ADD_INCLUDE
+dnl --with-libName 是加载其它库
 
 PHP_ARG_WITH(zdeng, for zdeng support,
 Make sure that the comment is aligned:
 [  --with-zdeng             Include zdeng support])
 
-dnl Otherwise use enable:
 
 
 
 
-dnl [Shark] open this to enable features
+dnl [Shark] 打开功能，PHP_ARG_ENABLE(feature, help-string, [./configure --help], $PHP_ default value；是否是拓展名，一般为0）
+dnl feature取名最好是如elf-debug形式，这样以$PHP_ELF_DEBUG获取是否设置
 
 PHP_ARG_ENABLE(zdeng, whether to enable zdeng support,
 Make sure that the comment is aligned:
@@ -66,7 +66,8 @@ if test "$PHP_ZDENG" != "no"; then
 
 
 
-
+  //加载头文件，需要开启PHP_ARG_WOTH
+  //include是自动生成的文件夹，来放头文件
   dnl # --with-zdeng -> add include path
   PHP_ADD_INCLUDE($ZDENG_DIR/include)
 
@@ -101,7 +102,8 @@ if test "$PHP_ZDENG" != "no"; then
 
 
 
-
+  dnl [Shark] 等号两边不能有空格！细节问题，不然模块无法编译
+  dnl 要编译的c文件
   zdeng_src="zdeng.c \
 	z_websocket.c \
 	src/core/array.c \
