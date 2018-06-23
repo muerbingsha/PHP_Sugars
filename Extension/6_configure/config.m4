@@ -13,12 +13,19 @@ dnl If your extension references something external, use with:
 
 
 
-dnl [Shark] open this for PHP_ADD_INCLUDE take effects
+dnl [Shark] open this( --with-moduleName ) for PHP_ADD_INCLUDE take effects
+dnl --with-libName to 
+
 PHP_ARG_WITH(zdeng, for zdeng support,
 Make sure that the comment is aligned:
 [  --with-zdeng             Include zdeng support])
 
 dnl Otherwise use enable:
+
+
+
+
+dnl [Shark] open this to enable features
 
 PHP_ARG_ENABLE(zdeng, whether to enable zdeng support,
 Make sure that the comment is aligned:
