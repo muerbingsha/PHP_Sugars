@@ -39,7 +39,7 @@ Make sure that the comment is aligned:
 
 
 
-
+dnl 模块启动的话
 if test "$PHP_ZDENG" != "no"; then
   dnl Write more examples of tests here...
 
