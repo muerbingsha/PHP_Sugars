@@ -13,7 +13,7 @@ PHP_FUNCTION(myDefault)
         Z_PARAM_STR(type)            // S
         Z_PARAM_OPTIONAL             // |
         Z_PARAM_ZVAL_EX(value, 0, 1) // z (0, 1)是打开两个specific，暂不明白什么意思
-    ZEND_PARSE_PARAMETERS_END();
+    ZEND_PARSE_PARAMETERS_END()
 #endif
     
     //                         type == "int"
