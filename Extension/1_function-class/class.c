@@ -38,7 +38,7 @@ PHP_MINIT_FUNCTION(deng)
   
     //类指针
     zend_class_entry *ce_ptr  
-    myclass_ce = zend_register_internal_class(&ce TSRMLS_CC);
+    myclass_ce = zend_register_internal_class(&ce TSRMLS_CC);//这步必须做，不然类会注册失败
     
     /* define class property
      * 3 infos are needed: name, value, visit_level
